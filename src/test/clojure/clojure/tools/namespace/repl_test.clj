@@ -38,3 +38,16 @@
     (is (= files-1 files-2))
     (is (contains? files-1 main-clj))
     (is (contains? files-1 one-cljc))))
+
+(deftest t-repl-scan-after-file-modified
+  (let [dir       (help/create-temp-dir "t-repl-scan-after-file-modified")
+        main-clj  (help/create-source dir 'example.main :clj)
+        _         (repl/set-refresh-dirs dir)
+        scan-1    (repl/scan {:platform find/clj})
+        _         (.setLastModified main-clj (System/currentTimeMillis))
+        scan-2    (repl/scan {:platform find/clj})
+        files-1   (::dir/files scan-1)
+        files-2   (::dir/files scan-2)]
+    (is (= 1 (count files-1)))
+    (is (= files-1 files-2))
+    (is (contains? files-1 main-clj))))
