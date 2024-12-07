@@ -31,7 +31,7 @@
   strings, written directly."
   [path contents]
   {:pre [(vector? path)]}
-  (let [^File file (apply io/file path)]
+  (let [^File file (.getCanonicalFile (apply io/file path))]
     (when-let [parent (.getParentFile file)]
       (.mkdirs parent))
     (with-open [wtr (io/writer file)]
@@ -95,4 +95,3 @@
   [files-a files-b]
   (= (sort (map #(.getCanonicalPath ^File %) files-a))
      (sort (map #(.getCanonicalPath ^File %) files-b))))
-
