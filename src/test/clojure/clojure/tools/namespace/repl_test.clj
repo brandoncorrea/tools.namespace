@@ -77,4 +77,4 @@
     (is (= {'example.main #{'example.one}} (:dependencies (::track/deps scan-1))))
     (is (= {'example.one #{'example.main}} (:dependents (::track/deps scan-1))))
     (is (= {} (:dependencies (::track/deps scan-2))))
-    (is (= {} (:dependents (::track/deps scan-2))))))
+    (is (= {'example.one #{}} (:dependents (::track/deps scan-2))))))

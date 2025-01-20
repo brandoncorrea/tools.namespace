@@ -44,10 +44,14 @@
     dependency of other nodes. That is, removes all outgoing edges from
     node."))
 
-(defn- remove-from-map [amap x]
+(defn- remove-from-vals [amap x]
   (reduce (fn [m [k vs]]
-	    (assoc m k (disj vs x)))
-	  {} (dissoc amap x)))
+            (assoc m k (disj vs x)))
+          {} amap))
+
+(defn- remove-from-map [amap x]
+  (-> (dissoc amap x)
+      (remove-from-vals x)))
 
 (defn- transitive
   "Recursively expands the set of dependency relationships starting
@@ -105,7 +109,7 @@
   (remove-node [graph node]
     (MapDependencyGraph.
      (dissoc dependencies node)
-     dependents)))
+     (remove-from-vals dependents node))))
 
 (defn graph "Returns a new, empty, dependency graph." []
   (->MapDependencyGraph {} {}))
